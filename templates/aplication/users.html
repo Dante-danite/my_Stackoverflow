@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div style="margin-left: 50px">
+  <h3 style="margin-top: 30px">Участники</h3>
+    <div class="row" style="margin-top: 40px">
+      <div class="col-3">
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+      <div class="col-9"></div>
+        {% for user in users %}
+          <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+            <div class="card mt-4" style="display: flex; flex-direction: column; --bs-card-spacer-y: 0; width: 120px">
+              <img src="{{ user.image.url }}" class="card-img-top" alt="" style="height: 80px">
+              <div class="card-body">
+                <p class="text-center" style="margin: 0">{{ user.username }}</p>
+                <p class="text-center" style="margin: 0">2 голоса</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

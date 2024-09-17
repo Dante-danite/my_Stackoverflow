@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div class="row" style="margin-left: 50px; margin-top: 50px">
+  <div class="col-3">
+    <img src="{{ user.image.url }}" alt="" class="square-image" style="border-radius: 15px">
+  </div>
+  <div class="col-5" style="margin-top: 40px">
+    <span style="font-size: 40px; margin-left: 30px">{{ user.username }}</span>
+    <p style="margin-left: 30px"><i class="fa-solid fa-calendar-days"></i> Участник в течение {{ days }} дней</p>
+  </div>
+</div>
+<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 370px; margin-top: 50px">
+  <a href="{% url 'aplication:my_questions' %}" class="btn btn-outline-secondary">Мои вопросы</a>
+  <a href="{% url 'aplication:my_answers' %}" class="btn btn-outline-secondary">Мои ответы</a>
+</div>
+<div style="margin-top: 30px">
+  <div class="border p-3" style="margin-left: 50px; border-radius: 30px">
+    {% for question in questions %}
+      {% with question_info=questions_info|get_item:question.id %}
+      <div class="row">
+        <div class="col-8">
+          <span>{{ question_info.total }} голосов</span>
+          <span style="margin-left: 5px"><button type="button" class="btn btn-outline-success" style="padding: 1px">{{ favorite_question.num_answers }} ответов</button></span>
+          <span style="margin-left: 5px">{{ question.views }} просмотра</span>
+        </div>
+        <div class="col-4">
+          <p class="text-end mb-0">Сохранено</p>
+        </div>
+      </div>
+      <a class="text-decoration" href="{% url 'aplication:detail_question' pk=question.id %}">{{ question.title }}</a>
+      <div class="row">
+        <div class="col-7">
+          {% for tag in question.tags.all %}
+            <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+          {% endfor %}
+          <div><a class="text-decoration" href="{% url 'aplication:edit' question.id %}" style="color: #5b5a5a; font-size: 14px">Редактировать вопрос</a></div>
+        </div>
+        <div class="col-5">
+          <p class="text-end mb-0"><img src="{{ question.author.image.url }}" style="height: 20px; width: 20px" alt="">
+            {{ question.author.username }} задан {{ question.date_create|date:"d F Y, H:i" }}
+          </p>
+        </div>
+      </div>
+      {% if not forloop.last %}
+        <hr class="mb-3 mt-3">
+      {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

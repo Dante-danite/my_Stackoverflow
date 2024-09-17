@@ -1,0 +1,85 @@
+.stackoverflow {
+    height: 40px;
+}
+
+hr {
+    border: none; /* Убираем стандартный бордер */
+    height: 1px; /* Задаем высоту линии */
+    background-color: #000; /* Задаем цвет линии */
+    margin: 0;
+}
+
+.vertical-line {
+    width: 1px; /* Ширина линии */
+    background-color: #d2cece; /* Цвет линии */
+    height: 100%; /* Высота линии равна высоте родительского контейнера */
+}
+
+.text-decoration {
+    text-decoration: none;
+}
+
+.text-decoration-black{
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.86);
+}
+
+.col-5 p {
+   overflow: hidden;
+   text-overflow: ellipsis; /* Добавить многоточие в конце, если текст слишком длинный */
+   white-space: nowrap; /* Запретить перенос строк */
+}
+
+.button-right {
+    position: absolute;
+    right: 300px; /* Отступ от правого края */
+    top: 80px; /* Отступ от верхнего края */
+}
+
+.btn-outline-success {
+    color: #28a745; /* Цвет текста */
+    background-color: transparent; /* Цвет фона */
+    border-color: #28a745; /* Цвет рамки */
+}
+
+.btn-outline-success:hover {
+    color: #28a745; /* Цвет текста при наведении */
+    background-color: transparent; /* Цвет фона при наведении */
+    border-color: #28a745; /* Цвет рамки при наведении */
+}
+
+.square-image {
+    width: 200px; /* Задайте желаемую ширину */
+    height: 200px; /* Задайте желаемую высоту */
+    object-fit: cover; /* Обрезает изображение, чтобы оно соответствовало размерам блока */
+}
+
+.truncate {
+    white-space: nowrap; /* Запрет переносов */
+    overflow: hidden;    /* Скрыть переполнение */
+    text-overflow: ellipsis; /* Добавить многоточие */
+}
+
+.ava-image {
+    width: 50px; /* Задайте желаемую ширину */
+    height: 50px; /* Задайте желаемую высоту */
+    object-fit: cover; /* Обрезает изображение, чтобы оно соответствовало размерам блока */
+}
+
+.card-img-top-user {
+    width: 60px; /* Ширина изображения */
+    height: 60px; /* Высота изображения и обрезка, если нужно */
+    object-fit: cover; /* Подгонка изображения */
+}
+
+.card-user {
+    display: flex;
+    flex-direction: column;
+    height: 300px; /* Задайте фиксированную высоту */
+    overflow: hidden; /* Скрыть выходящий контент */
+}
+
+.favorite {
+    border: none;
+    background-color: transparent
+}

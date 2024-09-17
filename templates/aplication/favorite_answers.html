@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div class="row" style="margin-left: 50px; margin-top: 50px">
+  <div class="col-3">
+    <img src="{{ user.image.url }}" alt="" class="square-image" style="border-radius: 15px">
+  </div>
+  <div class="col-5" style="margin-top: 40px">
+    <span style="font-size: 40px; margin-left: 30px">{{ user.username }}</span>
+    <p style="margin-left: 30px"><i class="fa-solid fa-calendar-days"></i> Участник в течение {{ days }} дней</p>
+  </div>
+</div>
+<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 370px; margin-top: 50px">
+  <a href="{% url 'aplication:favorites_questions' %}" class="btn btn-outline-secondary">Вопросы</a>
+  <a href="{% url 'aplication:favorites_answers' %}" class="btn btn-outline-secondary">Ответы</a>
+</div>
+<div style="margin-top: 30px">
+  <div class="border p-3" style="margin-left: 50px; border-radius: 30px">
+    {% for favorite_answer in favorite_answers %}
+      {% with question_info=questions_info|get_item:favorite_answer.id %}
+      <div class="row">
+        <div class="col-8">
+          <span>{{ question_info.total_questions }} голосов</span>
+          <span style="margin-left: 5px"><button type="button" class="btn btn-outline-success" style="padding: 1px">{{ favorite_answer.answers_count }} ответов</button></span>
+          <span style="margin-left: 5px">{{ favorite_answer.answer.question.views }} просмотра</span>
+        </div>
+        <div class="col-4">
+          <p class="text-end mb-0">Сохранено</p>
+        </div>
+      </div>
+      <a class="text-decoration" href="{% url 'aplication:detail_question' pk=favorite_answer.answer.question.id %}">{{ favorite_answer.answer.question.title }}</a>
+      <div class="row">
+        <div class="col-7">
+          {% for tag in favorite_answer.answer.question.tags.all %}
+            <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+          {% endfor %}
+        </div>
+        <div class="col-5">
+          <p class="text-end mb-0"><img src="{{ favorite_answer.answer.question.author.image.url }}" style="height: 20px; width: 20px" alt="">
+            {{ favorite_answer.answer.question.author.username }} задан {{ favorite_answer.answer.question.date_create|date:"d F Y, H:i" }}
+          </p>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px">
+        <div class="col-1" style="border-right: 3px solid #d2cece;"></div>
+        <div class="col-11">
+          <span>{{ question_info.total_answers }} голосов</span>
+          <span>Принятый</span>
+          <p class="truncate">{{ favorite_answer.answer.text }}</p>
+          <a class="text-decoration" href="{% url 'aplication:detail_question' pk=favorite_answer.answer.question.id %}">
+            <p class="mb-0">Посмотреть ответ</p>
+          </a>
+        </div>
+      </div>
+      {% if not forloop.last %}
+        <hr class="mt-3 mb-3">
+      {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

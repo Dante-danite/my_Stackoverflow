@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div style="margin-left: 50px">
+  <h3 style="margin-top: 30px">Метки</h3>
+  <p>
+    Метка — это ключевое слово, позволяющее отнести ваш вопрос в одну категорию с другими похожими вопросами. Благодаря подбору правильных меток другие участники смогут проще найти ваш вопрос и быстрее дать на него ответ.
+  </p>
+    <div class="row" style="margin-top: 40px">
+      <div class="col-3">
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+      <div class="col-9">
+        <div class="btn-group me-2" role="group" aria-label="First group" style="white-space: nowrap; margin-left: 530px">
+          <a href="{% url 'aplication:popular_tags' %}" class="btn btn-outline-secondary">Популярные</a>
+          <a href="{% url 'aplication:tags_name' %}" class="btn btn-outline-secondary">Имя</a>
+          <a href="{% url 'aplication:tags_date' %}" class="btn btn-outline-secondary">Новые</a>
+        </div>
+      </div>
+        {% for tag in tags %}
+          <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+            <div class="card mt-4" style="display: flex; flex-direction: column">
+              <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+              <div style="display: flex; justify-content: center;">
+                {{ tag.num_questions }} вопросов
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div style="margin-left: 50px">
+  <p style="margin-top: 10px">
+    <span style="font-size: 30px;" >{{ question.title }}</span>
+  </p>
+  <span style=" color: #483d9a">Вопрос задан {{ question.date_create|date:"d F Y, H:i" }}</span>
+  {% if question.date_create != question.date_update %}
+  <span style="margin-left: 30px; color: #483d9a">Вопрос изменен {{ question.date_update|date:"d F Y, H:i" }}</span>
+  {% endif %}
+  <span style="margin-left: 30px">Просомтров {{ question.views }}</span>
+  <hr>
+  <div class="row mb-3 mt-3">
+    <div class="col-2">
+      <div style="margin-left: 27px">
+        <form method="post" action="{% url 'aplication:question_voice_up' %}">
+          {% csrf_token %}
+          {% if question.id in questions_voice_up %}
+            <button class="favorite"><i class="fa-solid fa-circle-up fa-2x"></i></button>
+          {% else %}
+            <button class="favorite"><i class="fa-regular fa-circle-up fa-2x"></i></button>
+          {% endif %}
+          <input type="hidden" name="question_id" value="{{ question.id }}">
+        </form>
+        <p style="margin-left: 10px; font-size: 18px">{{ voice_question_count }}</p>
+        <form method="post" action="{% url 'aplication:question_voice_down' %}">
+          {% csrf_token %}
+          {% if question.id in questions_voice_down %}
+            <button class="favorite"><i class="fa-solid fa-circle-down fa-2x"></i></button>
+          {% else %}
+            <button class="favorite"><i class="fa-regular fa-circle-down fa-2x"></i></button>
+          {% endif %}
+          <input type="hidden" name="question_id" value="{{ question.id }}">
+        </form>
+        <form method="post" action="{% url 'aplication:is_favorite_question' %}">
+          {% csrf_token %}
+          {% if question.id in favorite_questions %}
+            <button class="favorite"><i class="fa-solid fa-bookmark" style="margin-left: 10px"></i></button>
+          {% else %}
+            <button class="favorite"><i class="fa-regular fa-bookmark" style="margin-left: 10px"></i></button>
+          {% endif %}
+          <input type="hidden" name="question_id" value="{{ question.id }}">
+        </form>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3 col-lg-12">
+        <div class="card mt-4" style="display: flex; flex-direction: column; --bs-card-spacer-y: 0; width: 80%">
+          <img src="{{ question.author.image.url }}" class="card-img-top" alt="" style="height: 60px">
+          <div class="card-body">
+            <p style="margin: 0">{{ question.author.username }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-10">
+      <div style="background-color: #f8f7f7; padding: 10px; border-radius: 5px">
+        <p class="mb-0" style="font-size: 20px">{{ question.text }}</p>
+      </div>
+      <p></p>
+      {% for tag in question.tags.all %}
+        <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+      {% endfor %}
+      <div class="row mb-3 mt-3">
+        <div class="col-1" style="border-right: 3px solid #d2cece;">
+        </div>
+        <div class="col-11">
+          {% for commit in question.comment_set.all %}
+            <div style="background-color: #f6f5f5; padding: 10px; border-radius: 5px; font-size: 14px">
+              {{ commit.text }}
+              <p class="text-end mb-0 mt-2"><img src="{{ commit.author.image.url }}" style="height: 20px; width: 20px" alt="">
+                {{ commit.author.username }} комментарий дан {{ commit.created_at|date:"d F Y, H:i" }}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size: 25px; margin-top: 20px">{{ answers_count }} Ответов</p>
+  {% for answer in answers %}
+    {% with answer_info=answer_info|get_item:answer.id %}
+    <div class="row mb-3 mt-3">
+      <div class="col-2">
+        <div style="margin-left: 27px">
+          <form method="post" action="{% url 'aplication:answer_voice_up' %}">
+            {% csrf_token %}
+            {% if answer.id in answers_voice_up %}
+              <button class="favorite"><i class="fa-solid fa-circle-up fa-2x"></i></button>
+            {% else %}
+              <button class="favorite"><i class="fa-regular fa-circle-up fa-2x"></i></button>
+            {% endif %}
+            <input type="hidden" name="answer_id" value="{{ answer.id }}">
+          </form>
+          <p style="margin-left: 16px; font-size: 18px">{{ answer_info.total }}</p>
+          <form method="post" action="{% url 'aplication:answer_voice_down' %}">
+            {% csrf_token %}
+            {% if answer.id in answers_voice_down %}
+              <button class="favorite"><i class="fa-solid fa-circle-down fa-2x"></i></button>
+            {% else %}
+              <button class="favorite"><i class="fa-regular fa-circle-down fa-2x"></i></button>
+            {% endif %}
+            <input type="hidden" name="answer_id" value="{{ answer.id }}">
+          </form>
+          <form method="post" action="{% url 'aplication:is_favorite_answer' %}">
+            {% csrf_token %}
+            {% if answer.id in favorite_answers %}
+              <button class="favorite"><i class="fa-solid fa-bookmark" style="margin-left: 10px"></i></button>
+            {% else %}
+              <button class="favorite"><i class="fa-regular fa-bookmark" style="margin-left: 10px"></i></button>
+            {% endif %}
+            <input type="hidden" name="answer_id" value="{{ answer.id }}">
+          </form>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 col-lg-12">
+          <div class="card mt-4" style="display: flex; flex-direction: column; --bs-card-spacer-y: 0; width: 80%">
+            <img src="{{ answer.author.image.url }}" class="card-img-top" alt="" style="height: 60px">
+            <div class="card-body">
+              <p style="margin: 0">{{ answer.author.username }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-10">
+        <div style="background-color: #e8e8e8; padding: 10px; border-radius: 5px">
+          {{ answer.text }}
+        </div>
+      </div>
+    </div>
+    <span style="font-size: 12px; color: #483d9a">
+      Ответ был дан {{ answer.date_create|date:"d F Y, H:i" }}
+    </span>
+    <hr>
+    {% endwith %}
+  {% endfor %}
+  <p style="margin-top: 30px">
+    Посмотрите другие вопросы с метками
+    {% for tag in question.tags.all %}
+      <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+    {% endfor %}
+    или задайте свой вопрос.
+  </p>
+</div>
+{% endblock %}
