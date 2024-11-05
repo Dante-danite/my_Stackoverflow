@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('auth/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
     path('', include('aplication.urls')),
     path(
       'auth/registration/',

@@ -18,9 +18,9 @@
           <a href="{% url 'aplication:index' %}"><img class="stackoverflow" src="{% static 'img/images.png' %}" alt="" style="margin-top: 5px"></a>
         </div>
         <div class="col-8">
-          <form class="d-flex" role="search" style="margin-top: 10px">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+          <form action="{% url 'aplication:search_question' %}" method="GET" class="d-flex" role="search" style="margin-top: 10px">
+            <input class="form-control me-2" type="search" placeholder="Поиск вопросов" name="q" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Поиск</button>
           </form>
         </div>
         <div class="col-2">
@@ -65,8 +65,16 @@
           {% block content %}{% endblock %}
         </div>
         <div class="col-2">
-          <div style="margin-top: 10px">
+          <div style="margin-top: 10px; margin-bottom: 10px">
             <a href="{% url 'aplication:create_question' %}"><button type="button" class="btn btn-primary" style="margin-left: auto; margin-top: 30px; white-space: nowrap;">Задать вопрос</button></a>
+          </div>
+          Популярные теги
+          <div style="margin-top: 10px">
+            {% for tag in tags %}
+              <p style="margin-left: 20px"><a class="text-decoration" href="{% url 'aplication:questions_tag' slug=tag.title %}">
+                <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+              </a></p>
+            {% endfor %}
           </div>
         </div>
       </div>

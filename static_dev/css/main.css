@@ -36,13 +36,13 @@ hr {
     top: 80px; /* Отступ от верхнего края */
 }
 
-.btn-outline-success {
-    color: #28a745; /* Цвет текста */
-    background-color: transparent; /* Цвет фона */
-    border-color: #28a745; /* Цвет рамки */
+.btn-outline-success-answer {
+    color: #28a745; /* Цвет текста при наведении */
+    background-color: transparent; /* Цвет фона при наведении */
+    border-color: #28a745; /* Цвет рамки при наведении */
 }
 
-.btn-outline-success:hover {
+.btn-outline-success-answer:hover {
     color: #28a745; /* Цвет текста при наведении */
     background-color: transparent; /* Цвет фона при наведении */
     border-color: #28a745; /* Цвет рамки при наведении */
@@ -83,3 +83,14 @@ hr {
     border: none;
     background-color: transparent
 }
+
+.custom-input {
+  width: 150px; /* Ширина поля ввода */
+ /* Отступы внутри поля */
+  border: 1px solid #ccc; /* Цвет и толщина рамки */
+  border-radius: 4px; /* Скругленные углы */
+  font-size: 14px; /* Размер шрифта */
+  transition: border-color 0.3s; /* Плавный переход для цвета рамки */
+}
+
+

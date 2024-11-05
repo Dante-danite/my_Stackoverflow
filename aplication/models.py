@@ -25,6 +25,7 @@ class Question(models.Model):
     tags = models.ManyToManyField(Tag, verbose_name='Теги')
     views = models.IntegerField(default=0, verbose_name='Просмотры', blank=False)
 
+
     class Meta:
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
@@ -40,10 +41,11 @@ class Question(models.Model):
 
 class Answer(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос', related_name='answers')
     text = models.TextField(verbose_name='Основная часть')
     date_create = models.DateTimeField(auto_now_add=True, verbose_name='дата добавления')
     date_update = models.DateTimeField(auto_now=True, verbose_name='дата обновления')
+    status_accepted = models.BooleanField(default=False, verbose_name='Статус лучшего ответа')
 
     class Meta:
         verbose_name = 'Ответ'
@@ -111,11 +113,11 @@ class VoiceAnswer(models.Model):
 
 
 class Comment(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Вопрос', related_name='comments_question')
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Ответ', related_name='comments_answer')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     text = models.TextField(verbose_name='Основная часть')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата обновления')
     date_update = models.DateTimeField(auto_now=True, verbose_name='дата обновления')
 
     class Meta:

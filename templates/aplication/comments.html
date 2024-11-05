@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div class="row" style="margin-left: 50px; margin-top: 50px">
+  <div class="col-3">
+    <img src="{{ user.image.url }}" alt="" class="square-image" style="border-radius: 15px">
+  </div>
+  <div class="col-5" style="margin-top: 40px">
+    <span style="font-size: 40px; margin-left: 30px">{{ user.username }}</span>
+    <p style="margin-left: 30px"><i class="fa-solid fa-calendar-days"></i> Участник в течение {{ days }} дней</p>
+  </div>
+</div>
+<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 270px; margin-top: 50px">
+  <a href="{% url 'aplication:my_questions' %}" class="btn btn-outline-secondary">Мои вопросы</a>
+  <a href="{% url 'aplication:my_answers' %}" class="btn btn-outline-secondary">Мои ответы</a>
+  <a href="{% url 'aplication:comments' %}" class="btn btn-outline-secondary">Мои комментарии</a>
+</div>
+<div style="margin-top: 30px; margin-bottom: 100px">
+  <div class="border p-3" style="margin-left: 50px; border-radius: 30px">
+    {% for comment in comments %}
+      {% if comment.question %}
+        {% with question_info=questions_info|get_item:comment.id %}
+        <div class="row">
+          <div class="col-8">
+            <span>{{ question_info.total_questions }} голосов</span>
+            <span style="margin-left: 5px">{{ comment.question.views }} просмотра</span>
+          </div>
+          <div class="col-4">
+            <p class="text-end mb-0">Сохранено</p>
+          </div>
+        </div>
+        <a class="text-decoration" href="{% url 'aplication:detail_question' pk=comment.question.id %}">{{ comment.question.title }}</a>
+        <div class="row">
+          <div class="col-7">
+            {% for tag in comment.question.tags.all %}
+              <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+            {% endfor %}
+          </div>
+          <div class="col-5">
+            <p class="text-end mb-0"><img src="{{ comment.question.author.image.url }}" style="height: 20px; width: 20px" alt="">
+              {{ comment.question.author.username }} вопрос задан {{ comment.question.date_create|date:"d F Y, H:i" }}
+            </p>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+          <div class="col-1" style="border-right: 3px solid #d2cece;"></div>
+          <div class="col-11">
+            <p class="truncate">{{ comment.text }}</p>
+            <div class="row">
+              <div class="col-4">
+                <a class="text-decoration" href="{% url 'aplication:detail_question' pk=comment.question.id %}">
+                  <span class="mb-0">Посмотреть вопрос</span>
+                  <a class="text-decoration" href="{% url 'aplication:edit_comment' comment.id %}" style="font-size: 16px">Редактировать комментарий</a>
+                  <a class="text-decoration" href="{% url 'aplication:delete_comment' comment.id %}" style="font-size: 16px">Удалить комментарий</a>
+                </a>
+              </div>
+              <div class="col-8">
+                <p class="text-end mb-0 mt-0"><img src="{{ comment.author.image.url }}" style="height: 20px; width: 20px" alt="">
+                  {{ comment.author.username }} комментарий дан {{ comment.created_at|date:"d F Y, H:i" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if not forloop.last %}
+          <hr class="mt-3 mb-3">
+        {% endif %}
+        {% endwith %}
+      {% else %}
+        {% with question_info=questions_info|get_item:comment.id %}
+        <div class="row">
+          <div class="col-8">
+            <span>{{ question_info.total_answers }} голосов</span>
+          </div>
+          <div class="col-4">
+            <p class="text-end mb-0">Сохранено</p>
+          </div>
+        </div>
+        <div style="margin-top: 10px">
+          {{ comment.answer.text|slice:":300" }}
+        </div>
+        <div class="row">
+          <div class="col-7">
+          </div>
+          <div class="col-5">
+            <p class="text-end mb-0" style="margin-top: 10px"><img src="{{ comment.answer.author.image.url }}" style="height: 20px; width: 20px" alt="">
+              {{ comment.answer.author.username }} ответ дан {{ comment.answer.date_create|date:"d F Y, H:i" }}
+            </p>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+          <div class="col-1" style="border-right: 3px solid #d2cece;"></div>
+          <div class="col-11">
+            <p>{{ comment.text}}</p>
+            <div class="row">
+              <div class="col-4">
+                {% if comment.answer %}
+                  <a class="text-decoration" href="{% url 'aplication:detail_question' pk=comment.answer.question.id %}">
+                    <span class="mb-0">Посмотреть ответ</span>
+                  </a>
+                  <a class="text-decoration" href="{% url 'aplication:edit_comment' comment.id %}" style="font-size: 16px">Редактировать комментарий</a>
+                  <a class="text-decoration" href="{% url 'aplication:delete_comment' comment.id %}" style="font-size: 16px">Удалить комментарий</a>
+                {% endif %}
+              </div>
+              <div class="col-8">
+                <p class="text-end mb-0 mt-0"><img src="{{ comment.author.image.url }}" style="height: 20px; width: 20px" alt="">
+                  {{ comment.author.username }} комментарий дан {{ comment.created_at|date:"d F Y, H:i" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if not forloop.last %}
+          <hr class="mt-3 mb-3">
+        {% endif %}
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

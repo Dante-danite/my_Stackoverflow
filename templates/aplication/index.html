@@ -4,7 +4,7 @@
 <div style="display: flex; align-items: center">
   <h3 style="margin-top: 30px; margin-left: 50px">Все вопросы</h3>
 </div>
-<div class="btn-group me-2" role="group" aria-label="First group" style="white-space: nowrap; margin-top: 30px; margin-left: 570px">
+<div class="btn-group me-2" role="group" aria-label="First group" style="white-space: nowrap; margin-top: 30px; margin-left: 550px">
   <a href="{% url 'aplication:popular_questions' %}" class="btn btn-outline-secondary">Популярные</a>
   <a href="{% url 'aplication:qustion_days' pk=7%}" class="btn btn-outline-secondary">За неделю</a>
   <a href="{% url 'aplication:qustion_days' pk=30%}" class="btn btn-outline-secondary">За месяц</a>
@@ -16,7 +16,7 @@
     <div class="row mb-3" style="margin-top: 10px">
       <div class="col-2" style="margin-left: 50px">
         <p class="text-end mb-0">{{ question_info.total }} голосов</p>
-        <p class="text-end mb-0"><button type="button" class="btn btn-outline-success" style="padding: 1px;">{{ question.num_answers }} ответов</button></p>
+        <p class="text-end mb-0"><button type="button" class="btn btn-outline-success-answer" style="padding: 1px;">{{ question.num_answers }} ответов</button></p>
         <p class="text-end mb-0">{{ question.views }} просмотров</p>
       </div>
       <div class="col-5">
@@ -33,7 +33,14 @@
           <img src="{{ question.author.image.url }}" style="height: 20px; width: 20px" alt="">{{ question.author }}
         </p>
         <p class="text-end mb-0" style="font-size: 14px">
-          Создан {{ question_info.question_days }} дней {{ question_info.question_hours }} часов {{ question_info.question_minutes }} минут назад
+          {% if question_info.question_days == 0 %}
+            {% if question_info.question_hours == 0 %}
+              Создан {{ question_info.question_minutes }} минут назад
+            {% endif %}
+            Создан {{ question_info.question_hours }} часов назад
+          {% else %}
+            Создан {{ question_info.question_days }} дней назад назад  
+          {% endif %}
         </p>
       </div>
     </div>

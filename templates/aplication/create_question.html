@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block content %}
 {% load static %}
 {% load django_bootstrap5 %}
-{% bootstrap_css %}
 <html lang="ru">
   <body>
     <div class="container">
@@ -23,7 +23,7 @@
                 {% bootstrap_form form %}
                 {% bootstrap_button button_type="submit" content="Редактировать" %}
               {% elif "/delete/" in request.path %}
-                <p>{{ object.comment }}</p>
+                <p>{{ object.comment }}что это</p>
                 {% bootstrap_button button_type="submit" content="Удалить" %}
               {% else %}
                 {% bootstrap_form form %}
@@ -36,3 +36,4 @@
     </div>
   </body>
 </html>
+{% endblock %}

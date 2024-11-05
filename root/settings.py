@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,7 +20,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django_bootstrap5",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,6 +29,10 @@ INSTALLED_APPS = [
 
     'users',
     'aplication',
+    'django_bootstrap5',
+    'rest_framework',
+    'api',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -128,5 +132,22 @@ LOGIN_REDIRECT_URL = 'aplication:index'
 
 LOGOUT_REDIRECT_URL = 'aplication:index'
 
+LOGIN_URL = 'login'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+
+SIMPLE_JWT = {
+    # Устанавливаем срок жизни токена
+   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+   'AUTH_HEADER_TYPES': ('Bearer',),
+}
 

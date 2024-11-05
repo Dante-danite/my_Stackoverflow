@@ -9,7 +9,7 @@
   {% if question.date_create != question.date_update %}
   <span style="margin-left: 30px; color: #483d9a">Вопрос изменен {{ question.date_update|date:"d F Y, H:i" }}</span>
   {% endif %}
-  <span style="margin-left: 30px">Просомтров {{ question.views }}</span>
+  <span style="margin-left: 30px">Просмотров {{ question.views }}</span>
   <hr>
   <div class="row mb-3 mt-3">
     <div class="col-2">
@@ -53,22 +53,29 @@
       </div>
     </div>
     <div class="col-10">
-      <div style="background-color: #f8f7f7; padding: 10px; border-radius: 5px">
+      <div style="background-color: #f8f7f7; padding: 10px; border-radius: 5px; margin-bottom: 20px">
         <p class="mb-0" style="font-size: 20px">{{ question.text }}</p>
       </div>
-      <p></p>
       {% for tag in question.tags.all %}
-        <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+        <a class="text-decoration" href="{% url 'aplication:questions_tag' slug=tag.title %}">
+          <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+        </a>
       {% endfor %}
+      {% if question.author != request.user %}
+        <div style="margin-top: 10px">
+          <a href="{% url 'aplication:create_answer' question.id %}"><button type="button" class="btn btn-primary" style="margin-left: auto; margin-top: 30px; white-space: nowrap; font-size: 10px">Дать ответ</button></a>
+          <a href="{% url 'aplication:create_comment_question' question.id %}"><button type="button" class="btn btn-primary" style="margin-left: auto; margin-top: 30px; white-space: nowrap; font-size: 10px">Оставить комментарий</button></a>
+        </div>
+      {% endif %}
       <div class="row mb-3 mt-3">
         <div class="col-1" style="border-right: 3px solid #d2cece;">
         </div>
         <div class="col-11">
-          {% for commit in question.comment_set.all %}
-            <div style="background-color: #f6f5f5; padding: 10px; border-radius: 5px; font-size: 14px">
-              {{ commit.text }}
-              <p class="text-end mb-0 mt-2"><img src="{{ commit.author.image.url }}" style="height: 20px; width: 20px" alt="">
-                {{ commit.author.username }} комментарий дан {{ commit.created_at|date:"d F Y, H:i" }}
+          {% for comment in question.comments_question.all %}
+            <div style="background-color: #f6f5f5; padding: 10px; border-radius: 5px; font-size: 14px; margin-bottom: 20px">
+              {{ comment.text }}
+              <p class="text-end mb-0 mt-2"><img src="{{ comment.author.image.url }}" style="height: 20px; width: 20px" alt="">
+                {{ comment.author.username }} комментарий дан {{ comment.created_at|date:"d F Y, H:i" }}
               </p>
             </div>
           {% endfor %}
@@ -77,6 +84,7 @@
     </div>
   </div>
   <p style="font-size: 25px; margin-top: 20px">{{ answers_count }} Ответов</p>
+<!------------------------------------------------- ОТВЕТЫ------------------------------------------------------------->
   {% for answer in answers %}
     {% with answer_info=answer_info|get_item:answer.id %}
     <div class="row mb-3 mt-3">
@@ -111,6 +119,9 @@
             <input type="hidden" name="answer_id" value="{{ answer.id }}">
           </form>
         </div>
+        {% if answer.status_accepted == True %}
+          <i style="color: #015c15; margin-left: 35px" class="fa-solid fa-check fa-2x"></i>
+        {% endif %}
         <div class="col-12 col-sm-6 col-md-3 col-lg-12">
           <div class="card mt-4" style="display: flex; flex-direction: column; --bs-card-spacer-y: 0; width: 80%">
             <img src="{{ answer.author.image.url }}" class="card-img-top" alt="" style="height: 60px">
@@ -124,6 +135,32 @@
         <div style="background-color: #e8e8e8; padding: 10px; border-radius: 5px">
           {{ answer.text }}
         </div>
+        {% if question.author == request.user and answer.status_accepted == False %}
+          <form method="post" style="margin-top: 10px" action="{% url 'aplication:make_question_accepted' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success">Принять ответ</button>
+            <input type="hidden" name="answer_id" value="{{ answer.id }}">
+          </form>
+        {% endif %}
+        {% if answer.author != request.user %}
+          <div style="margin-top: 10px">
+            <a href="{% url 'aplication:create_comment_answer' answer.id%}"><button type="button" class="btn btn-primary" style="margin-left: auto; margin-top: 30px; white-space: nowrap; font-size: 10px">Оставить комментарий</button></a>
+          </div>
+        {% endif %}
+        <div class="row mb-3 mt-3">
+        <div class="col-1" style="border-right: 3px solid #d2cece;">
+        </div>
+        <div class="col-11">
+          {% for commit in answer.comments_answer.all %}
+            <div style="background-color: #f6f5f5; padding: 10px; border-radius: 5px; font-size: 14px; margin-bottom: 20px">
+              {{ commit.text }}
+              <p class="text-end mb-0 mt-2"><img src="{{ commit.author.image.url }}" style="height: 20px; width: 20px" alt="">
+                {{ commit.author.username }} комментарий дан {{ commit.created_at|date:"d F Y, H:i" }}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
       </div>
     </div>
     <span style="font-size: 12px; color: #483d9a">
@@ -135,9 +172,13 @@
   <p style="margin-top: 30px">
     Посмотрите другие вопросы с метками
     {% for tag in question.tags.all %}
-      <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+      <a class="text-decoration" href="{% url 'aplication:questions_tag' slug=tag.title %}">
+        <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
+      </a>
     {% endfor %}
     или задайте свой вопрос.
   </p>
 </div>
 {% endblock %}
+
+

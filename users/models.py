@@ -9,6 +9,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50, verbose_name='Фамилия', blank=False)
     email = models.EmailField(max_length=50, verbose_name='Электронная почта')
     image = models.ImageField(verbose_name='Аватар', blank=False)
+    telegram_id = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -17,3 +18,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        if not self.image:
+            self.image = 'Capture001.png'
+        super().save(*args, **kwargs)

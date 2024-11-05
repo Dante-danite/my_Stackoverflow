@@ -1,5 +1,4 @@
 from django import forms
-
 from .models import *
 
 
@@ -14,4 +13,12 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields =('text',)
+
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        exclude = ('question', 'author', 'status_accepted')
+
+

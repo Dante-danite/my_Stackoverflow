@@ -1,5 +1,7 @@
-<!doctype html>
+{% extends "base.html" %}
+{% block content %}
 {% load static %}
+{% load django_bootstrap5 %}
 <html lang="en">
   <body>
     <!-- Загружаем библиотеку для работы со стилями Bootstrap. -->
@@ -43,3 +45,4 @@
     </div>
   </body>
 </html>
+{% endblock %}

@@ -10,18 +10,19 @@
     <p style="margin-left: 30px"><i class="fa-solid fa-calendar-days"></i> Участник в течение {{ days }} дней</p>
   </div>
 </div>
-<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 370px; margin-top: 50px">
-  <a href="{% url 'aplication:my_questions' %}" class="btn btn-outline-secondary">Вопросы</a>
-  <a href="{% url 'aplication:my_answers' %}" class="btn btn-outline-secondary">Ответы</a>
+<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 270px; margin-top: 50px">
+  <a href="{% url 'aplication:my_questions' %}" class="btn btn-outline-secondary">Мои вопросы</a>
+  <a href="{% url 'aplication:my_answers' %}" class="btn btn-outline-secondary">Мои ответы</a>
+  <a href="{% url 'aplication:comments' %}" class="btn btn-outline-secondary">Мои комментарии</a>
 </div>
 <div style="margin-top: 30px">
-  <div class="border p-3" style="margin-left: 50px; border-radius: 30px">
+  <div class="border p-3" style="margin-left: 50px; border-radius: 30px; margin-bottom: 50px">
     {% for answer in answers %}
       {% with question_info=questions_info|get_item:answer.id %}
       <div class="row">
         <div class="col-8">
           <span>{{ question_info.total_questions }} голосов</span>
-          <span style="margin-left: 5px"><button type="button" class="btn btn-outline-success" style="padding: 1px">{{ answer.answers_count }} ответов</button></span>
+          <span style="margin-left: 5px"><button type="button" class="btn btn-outline-success-answer" style="padding: 1px">{{ answer.answers_count }} ответов</button></span>
           <span style="margin-left: 5px">{{ answer.question.views }} просмотра</span>
         </div>
         <div class="col-4">
@@ -51,6 +52,8 @@
             <div class="col-3">
               <a class="text-decoration" href="{% url 'aplication:detail_question' pk=answer.question.id %}">
                 <span class="mb-0">Посмотреть ответ</span>
+                <a class="text-decoration" href="{% url 'aplication:edit_answer' answer.id %}" style="font-size: 16px">Редактировать ответ</a>
+                <a class="text-decoration" href="{% url 'aplication:delete_answer' answer.id %}" style="font-size: 16px">Удалить ответ</a>
               </a>
             </div>
             <div class="col-9">

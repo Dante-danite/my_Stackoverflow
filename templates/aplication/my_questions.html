@@ -5,23 +5,37 @@
   <div class="col-3">
     <img src="{{ user.image.url }}" alt="" class="square-image" style="border-radius: 15px">
   </div>
-  <div class="col-5" style="margin-top: 40px">
+  <div class="col-9" style="margin-top: -15px">
     <span style="font-size: 40px; margin-left: 30px">{{ user.username }}</span>
     <p style="margin-left: 30px"><i class="fa-solid fa-calendar-days"></i> Участник в течение {{ days }} дней</p>
+    <p style="margin-bottom: 0; margin-left: 30px; color: #868887; font-size: 14px">Сменить изображение профиля</p>
+    <form  style="margin-left: 30px" action="{% url 'aplication:upload_user_image' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <p style="margin-bottom: 0"><input type="file" name="file_upload"></p>
+      <button style="font-size: 10px; margin-top: 10px" type="submit" class="btn btn-outline-dark">Отправить</button>
+    </form>
+    <form method="post" style="margin-left: 30px" action="{% url 'aplication:post_telegram_id' %}">
+      {% csrf_token %}
+      <p style="margin-bottom: 0"><label>
+        <input type="number" name="telegram_id" class="custom-input">
+      </label> Введите Telegram ID для уведомлений</p>
+      <button style="font-size: 10px; margin-top: 10px" type="submit" class="btn btn-outline-dark">Отправить</button>
+    </form>
   </div>
 </div>
-<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 370px; margin-top: 50px">
+<div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 270px; margin-top: 50px">
   <a href="{% url 'aplication:my_questions' %}" class="btn btn-outline-secondary">Мои вопросы</a>
   <a href="{% url 'aplication:my_answers' %}" class="btn btn-outline-secondary">Мои ответы</a>
+  <a href="{% url 'aplication:comments' %}" class="btn btn-outline-secondary">Мои комментарии</a>
 </div>
 <div style="margin-top: 30px">
-  <div class="border p-3" style="margin-left: 50px; border-radius: 30px">
+  <div class="border p-3" style="margin-left: 50px; border-radius: 30px; margin-bottom: 50px">
     {% for question in questions %}
       {% with question_info=questions_info|get_item:question.id %}
       <div class="row">
         <div class="col-8">
           <span>{{ question_info.total }} голосов</span>
-          <span style="margin-left: 5px"><button type="button" class="btn btn-outline-success" style="padding: 1px">{{ favorite_question.num_answers }} ответов</button></span>
+          <span style="margin-left: 5px"><button type="button" class="btn btn-outline-success-answer" style="padding: 1px">{{ question.answers_count }} ответов</button></span>
           <span style="margin-left: 5px">{{ question.views }} просмотра</span>
         </div>
         <div class="col-4">
@@ -34,7 +48,7 @@
           {% for tag in question.tags.all %}
             <button type="button" class="btn btn-secondary btn-sm" style="padding: 1px; background-color: rgba(229,229,229,0.61); color: rgb(9,0,0); border: none">{{ tag.title }}</button>
           {% endfor %}
-          <div><a class="text-decoration" href="{% url 'aplication:edit' question.id %}" style="color: #5b5a5a; font-size: 14px">Редактировать вопрос</a></div>
+          <div><a class="text-decoration" href="{% url 'aplication:edit' question.id %}" style="font-size: 14px">Редактировать вопрос</a></div>
         </div>
         <div class="col-5">
           <p class="text-end mb-0"><img src="{{ question.author.image.url }}" style="height: 20px; width: 20px" alt="">

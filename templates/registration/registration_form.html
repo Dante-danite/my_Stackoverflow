@@ -1,4 +1,5 @@
-<!doctype html>
+{% extends "base.html" %}
+{% block content %}
 {% load static %}
 {% load django_bootstrap5 %}
 <html lang="en">
@@ -20,6 +21,7 @@
         Регистрация пользователя
       </div>
       <div class="card-body">
+        <form method="post">
           {% csrf_token %}
           {% bootstrap_form form %}
           {{ data.amount }}
@@ -30,3 +32,4 @@
     {% endwith %}
   </body>
 </html>
+{% endblock %}
