@@ -684,7 +684,6 @@ def post_telegram_id(request):
         telegram_id = request.POST.get('telegram_id')
         if telegram_id:
             request.user.telegram_id = telegram_id
-            request.user.save()  # Не забудьте сохранить изменения в базе данных
-        # Перенаправить на предыдущую страницу
+            request.user.save()
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect(request.META.get('HTTP_REFERER'))
