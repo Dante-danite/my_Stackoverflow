@@ -15,7 +15,6 @@ from users.forms import *
 TELEGRAM_TOKEN = '7904756054:AAG7B-cee2dnK3BYzOWDaQabk1wu5tLnO2Y'
 bot = Bot(token=TELEGRAM_TOKEN)
 
-
 async def send_telegram_notification(chat_id, message):
     await bot.send_message(chat_id=chat_id, text=message)
 
